@@ -1,6 +1,6 @@
 <template>
-  <div class="hello">
-    helloworld
+  <div >
+    分类
   </div>
 </template>
 

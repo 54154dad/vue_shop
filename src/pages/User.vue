@@ -1,6 +1,6 @@
 <template>
-  <div class="hello">
-    helloworld
+  <div >
+    我的
   </div>
 </template>
 
