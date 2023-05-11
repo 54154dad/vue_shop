@@ -36,9 +36,9 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .mui-bar-tab .mui-tab-item-lib.mui-active{
-    color:#007aff ;
+    color:#007aff;
   }
-  .mui-bar-tab .mui-bar-tab-item-lib{
+  .mui-bar-tab .mui-tab-item-lib{
     display: table-cell;
     overflow: hidden;
     width: 1%;
@@ -50,7 +50,7 @@
     color: #929292;
   }
 
-  .mui-bar-tab .mui-bar-tab-item-lib .mui-icon{
+  .mui-bar-tab .mui-tab-item-lib .mui-icon{
     top: 3px;
     width: 24px;
     height: 24px;
@@ -58,10 +58,12 @@
     padding-bottom: 0;
   }
 
-  .mui-bar-tab .mui-bar-tab-item-lib .mui-icon ~ .mui-tab-label{
+  .mui-bar-tab .mui-tab-item-lib .mui-icon ~ .mui-tab-label{
     font-size: 11px;
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+
 </style>
