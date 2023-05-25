@@ -1,34 +1,134 @@
 <template>
-  <div class="member">
-    <div class="header-con">
-      <router-link :to="{name:'login'}" class="mui-navigate-right">
-        <div class="user-info">
-          <!--用户信息-->
-          <div class="avatar-con">
-            <div class="avatar">
-              <img src="../assets/images/avatar_default.png" class="img-info">
+  <div v-if="isLogin">
+    <div class="member">
+      <div class="header-con">
+          <div class="user-info">
+            <!--用户信息-->
+            <div class="avatar-con">
+              <div class="avatar">
+                <img src="../assets/images/avatar_default.png" class="img-info">
+              </div>
             </div>
+            <div class="person-con">
+              <span>{{username}}}</span>
+            </div>
+
           </div>
-          <div class="person-con">
-            <span>登录  /  注册</span>
+      </div>
+    </div>
+
+    <ul class="mui-table-view mui-table-view-chevron">
+      <li class="mui-table-view-cell mui-media">
+        <div class="mui-navigate-right">
+          <img class="mui-media-object mui-pull-left" src="../assets/images/MyOrder.png">
+          <div class="mui-media-body">
+            我的订单
           </div>
         </div>
-      </router-link>
+      </li>
+
+      <li class="mui-table-view-cell mui-media">
+        <div class="mui-navigate-right">
+          <img class="mui-media-object mui-pull-left" src="../assets/images/DeliveryAddress.png">
+          <div class="mui-media-body">
+            收货地址
+          </div>
+        </div>
+      </li>
+
+      <li class="mui-table-view-cell mui-media">
+        <div class="mui-navigate-right">
+          <img class="mui-media-object mui-pull-left" src="../assets/images/MemberBenefits.png">
+          <div class="mui-media-body">
+            会员福利
+          </div>
+        </div>
+      </li>
+
+      <li class="mui-table-view-cell mui-media">
+        <div class="mui-navigate-right">
+          <img class="mui-media-object mui-pull-left" src="../assets/images/MyOffer.png">
+          <div class="mui-media-body">
+            我的优惠
+          </div>
+        </div>
+      </li>
+
+      <li class="mui-table-view-cell mui-media">
+        <div class="mui-navigate-right">
+          <img class="mui-media-object mui-pull-left" src="../assets/images/ServiceCenter.png">
+          <div class="mui-media-body">
+            服务中心
+          </div>
+        </div>
+      </li>
+
+      <li class="mui-table-view-cell mui-media">
+        <div class="mui-navigate-right">
+          <img class="mui-media-object mui-pull-left" src="../assets/images/set.png">
+          <div class="mui-media-body">
+              设置
+          </div>
+        </div>
+      </li>
+
+      <li class="mui-table-view-cell mui-media">
+        <div class="mui-navigate-right" @click="logout">
+          <img class="mui-media-object mui-pull-left" src="../assets/images/logOut.png">
+          <div class="mui-media-body">
+            退出登录
+          </div>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+
+  <div v-else>
+    <div class="member">
+      <div class="header-con">
+        <router-link :to="{name:'login'}" class="mui-navigate-right">
+          <div class="user-info">
+            <!--用户信息-->
+            <div class="avatar-con">
+              <div class="avatar">
+                <img src="../assets/images/avatar_default.png" class="img-info">
+              </div>
+            </div>
+            <div class="person-con">
+              <span>登录  /  注册</span>
+            </div>
+          </div>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+  import {mapState,mapGetters} from 'vuex'
+
   export default {
-    name: 'HelloWorld',
-    props: {
-      msg: String
+    computed:{
+      ...mapState({
+        username:state => state.user.username
+      }),
+      ...mapGetters('user',{isLogin:'isLogin'})
+    },
+    methods:{
+      logout(){
+        this.$http.get('logout');
+        this.$store.commit('user/logout');
+        this.$auth.setAuthorization('');
+        this.$toast('退出成功！')
+      }
     }
   }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+
   .mui-table-view .mui-media,
   .mui-table-view .mui-media-body {
     line-height: 42px;
