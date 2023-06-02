@@ -1,32 +1,147 @@
 <template>
-  <div >
-    购物车
+  <div class="shopcar-container">
+    <div class="goods-list">
+      <div class="mui-card">
+        <div class="mui-card-content" v-for="(item) in goodslist" :key="item.id">
+          <div class="mui-card-content-inner flex">
+            <!--复选框-->
+            <div class="mui-input-row mui-checkbox mui-left">
+              <label>&nbsp;</label>
+              <input type="checkbox">
+            </div>
+            <!--商品图片-->
+            <img :src="item.image">
+            <!--右侧部分-->
+            <div class="info">
+              <h1>{{item.name}}</h1>
+              <p class="flex">
+                <span class="price">￥{{item.price}}</span>
+                <numbox v-if="item.num" @count="countChange" :initcount="getGoodsCount[item.id]" :max="item.num" :goodsid="item.id" size="min"></numbox>
+                <span v-else style="margin-right:20px ;">该商品暂时无货</span>
+                <a href="#">删除</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'HelloWorld',
-    props: {
-      msg: String
+import {mapState,mapGetters} from 'vuex'
+import numbox from "../components/numbox";
+export default {
+  data(){
+    return{
+      goodslist:[]
+    }
+  },
+  components:{
+    numbox
+  },
+  computed:{
+    ...mapState('shopcart',['car']),
+    ...mapGetters('shopcart',['getGoodsCount'])
+  },
+  created() {
+    this.getGoodsList();
+  },
+  methods:{
+    getGoodsList(){
+      var idArr = [];
+      this.car.forEach(item => idArr.push(item.id))
+      if(idArr.length <= 0){
+        return
+      }
+      // window.console.log(idArr)
+      this.$indicator.open({
+        text:'加载中'
+      })
+      let params = {ids:idArr};
+      this.$http.get('shopcart',{params:params}).then(res => {
+        this.$indicator.close();
+        // window.console.log(res.data);
+        if(res.data.code === 0){
+          this.$toast(res.data.msg);
+        } else if(res.data.code === 1){
+          this.goodslist = res.data.data;
+        } else {
+          this.$toast('加载失败，服务器异常');
+        }
+      })
+    },
+    countChange(goodsinfo){
+      // window.console.log(goodsinfo);
+      this.$store.commit('shopcart/updateGoodsInfo',goodsinfo);
     }
   }
+
+}
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-  h3 {
-    margin: 40px 0 0;
+<style lang="scss" scoped>
+.flex {
+  display: flex;
+}
+.shopcar-container {
+  background: #eee;
+  overflow: hidden;
+  .goods-list {
+    .mui-card-content-inner {
+      align-items: center;
+      padding: 10px;
+      .mui-checkbox.mui-left input[type="checkbox"] {
+        left: 0px;
+      }
+      .mui-radio.mui-left label,
+      .mui-checkbox.mui-left label {
+        padding-left: 20px;
+        padding-right: 35px;
+        padding-bottom: 22px;
+      }
+    }
+    img {
+      width: 60px;
+    }
+    .info {
+      margin-left: 10px;
+      width: 100%;
+      overflow: hidden;
+      box-sizing: border-box;
+      h1 {
+        font-size: 13px;
+        font-weight: bold;
+        line-height: 20px;
+        padding-top: 10px;
+      }
+      p {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        .price {
+          text-align: left;
+          font-size: 16px;
+          font-weight: 700;
+          color: red;
+          flex: 1;
+        }
+        a {
+          line-height: 25px;
+        }
+      }
+    }
   }
-  ul {
-    list-style-type: none;
-    padding: 0;
+  .balance {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .red {
+      color: red;
+      font-weight: bold;
+      font-size: 16px;
+    }
   }
-  li {
-    display: inline-block;
-    margin: 0 10px;
-  }
-  a {
-    color: #42b983;
-  }
+}
 </style>
